@@ -102,4 +102,32 @@ class RedirectRequestService
             'parsedBody' => is_array($request->getParsedBody()) ? $request->getParsedBody() : [],
         ];
     }
+
+    public function getUriAfterAuthenticationSuccess(string $originalUri): string
+    {
+        $returnUrl = $this->getReturnUrlFromOriginalUrl($originalUri);
+
+        if (!$returnUrl) {
+            $returnUrl = $this->removeOauth2ParametersFromUri($originalUri);
+        }
+
+        return $returnUrl;
+    }
+
+    private function getReturnUrlFromOriginalUrl(string $originalUri): ?string
+    {
+        try {
+            $uri = new Uri($originalUri);
+        } catch (\Exception) {
+            return null;
+        }
+
+        parse_str($uri->getQuery(), $queryParameters);
+
+        if (isset($queryParameters['return_url']) && $queryParameters['return_url']) {
+            return $queryParameters['return_url'];
+        }
+
+        return null;
+    }
 }

@@ -129,7 +129,7 @@ class AfterAuthenticationHandler implements MiddlewareInterface
                 // response code was not changed by legacy code (eg. extbase redirect)
                 // make a (GET) redirect to the post url after the post subrequest.
                 if ((http_response_code() === 200) && $response->getStatusCode() >= 200 && $response->getStatusCode() <= 299) {
-                    $redirectUri = $this->redirectRequestService->removeOauth2ParametersFromUri($originalRequestData['uri']);
+                    $redirectUri = $this->redirectRequestService->getUriAfterAuthenticationSuccess($originalRequestData['uri']);
                     $response = $this->responseFactory
                         ->createResponse(302, 'OAuth2: Done. Redirection via GET to original requested POST location')
                         ->withHeader('location', $redirectUri);
@@ -138,7 +138,7 @@ class AfterAuthenticationHandler implements MiddlewareInterface
                 return $this->sessionManager->appendRemoveOAuth2CookieToResponse($response, $request);
             }
 
-            $redirectUri = $this->redirectRequestService->removeOauth2ParametersFromUri($originalRequestData['uri']);
+            $redirectUri = $this->redirectRequestService->getUriAfterAuthenticationSuccess($originalRequestData['uri']);
             $response = $this->responseFactory
                 ->createResponse(302, 'OAuth2: Done. Redirection to original requested location')
                 ->withHeader('location', $redirectUri);
