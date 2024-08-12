@@ -21,6 +21,7 @@ namespace Waldhacker\Oauth2Client\Repository;
 use Doctrine\DBAL\FetchMode;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
@@ -58,10 +59,10 @@ class BackendUserRepository
             ->join('config', 'be_users', 'be_users', 'config.' . $userWithEditRightsColumn . '=be_users.uid')
             ->where(
                 $qb->expr()->and(
-                    $qb->expr()->eq('identifier', $qb->createNamedParameter($identifier, \PDO::PARAM_STR)),
-                    $qb->expr()->eq('provider', $qb->createNamedParameter($provider, \PDO::PARAM_STR)),
-                    $qb->expr()->neq('identifier', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, \PDO::PARAM_STR)),
-                    $qb->expr()->neq('provider', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, \PDO::PARAM_STR))
+                    $qb->expr()->eq('identifier', $qb->createNamedParameter($identifier, Connection::PARAM_STR)),
+                    $qb->expr()->eq('provider', $qb->createNamedParameter($provider, Connection::PARAM_STR)),
+                    $qb->expr()->neq('identifier', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, Connection::PARAM_STR)),
+                    $qb->expr()->neq('provider', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, Connection::PARAM_STR))
                 )
             )
             ->executeQuery();
@@ -123,9 +124,9 @@ class BackendUserRepository
             ->join('config', 'be_users', 'be_users', 'config.' . $userWithEditRightsColumn . '=be_users.uid')
             ->where(
                 $qb->expr()->and(
-                    $qb->expr()->eq('be_users.uid', $qb->createNamedParameter($userid, \PDO::PARAM_INT)),
-                    $qb->expr()->neq('config.identifier', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, \PDO::PARAM_STR)),
-                    $qb->expr()->neq('config.provider', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, \PDO::PARAM_STR))
+                    $qb->expr()->eq('be_users.uid', $qb->createNamedParameter($userid, Connection::PARAM_INT)),
+                    $qb->expr()->neq('config.identifier', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, Connection::PARAM_STR)),
+                    $qb->expr()->neq('config.provider', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, Connection::PARAM_STR))
                 )
             )
             ->executeQuery();
@@ -147,11 +148,11 @@ class BackendUserRepository
             ->from(self::OAUTH2_BE_CONFIG_TABLE)
             ->where(
                 $qb->expr()->and(
-                    $qb->expr()->eq('identifier', $qb->createNamedParameter($identifier, \PDO::PARAM_STR)),
-                    $qb->expr()->eq('provider', $qb->createNamedParameter($provider, \PDO::PARAM_STR)),
-                    $qb->expr()->neq('identifier', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, \PDO::PARAM_STR)),
-                    $qb->expr()->neq('provider', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, \PDO::PARAM_STR)),
-                    $qb->expr()->eq($userWithEditRightsColumn, $qb->createNamedParameter($userid, \PDO::PARAM_INT))
+                    $qb->expr()->eq('identifier', $qb->createNamedParameter($identifier, Connection::PARAM_STR)),
+                    $qb->expr()->eq('provider', $qb->createNamedParameter($provider, Connection::PARAM_STR)),
+                    $qb->expr()->neq('identifier', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, Connection::PARAM_STR)),
+                    $qb->expr()->neq('provider', $qb->createNamedParameter(DataHandlerHook::INVALID_TOKEN, Connection::PARAM_STR)),
+                    $qb->expr()->eq($userWithEditRightsColumn, $qb->createNamedParameter($userid, Connection::PARAM_INT))
                 )
             )
             ->executeQuery();
