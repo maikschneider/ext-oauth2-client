@@ -19,9 +19,9 @@ declare(strict_types=1);
 namespace Waldhacker\Oauth2Client\Backend\Form\RenderType;
 
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
-use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Core\Imaging\Icon;
+use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 use Waldhacker\Oauth2Client\Service\Oauth2ProviderManager;
@@ -33,14 +33,13 @@ class Oauth2ProvidersElement extends AbstractFormElement
     private Oauth2ProviderManager $oauth2ProviderManager;
     private UriBuilder $uriBuilder;
 
-    public function __construct(NodeFactory $NodeFactory, array $data)
+    public function __construct(private readonly IconFactory $iconFactory)
     {
-        parent::__construct($NodeFactory, $data);
         $this->uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
         $this->oauth2ProviderManager = GeneralUtility::makeInstance(Oauth2ProviderManager::class);
     }
 
-    public function render()
+    public function render(): array
     {
         $resultArray = $this->initializeResultArray();
         $tableName = $this->data['tableName'];
