@@ -24,7 +24,6 @@ use TYPO3\CMS\Core\Http\Uri;
 use TYPO3\CMS\Core\Site\Entity\Site;
 use TYPO3\CMS\Core\Site\Entity\SiteInterface;
 use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class SiteService
 {
@@ -32,22 +31,12 @@ class SiteService
 
     public function getSite(ServerRequestInterface $request = null): ?SiteInterface
     {
-        $tsfe = $this->getTypoScriptFrontendController();
-        if ($tsfe) {
-            return $tsfe->getSite();
-        }
-        $request = $this->getRequest($request);
-        return $request->getAttribute('site', null);
+        return $this->getRequest($request)?->getAttribute('site');
     }
 
     public function getLanguage(ServerRequestInterface $request = null): ?SiteLanguage
     {
-        $tsfe = $this->getTypoScriptFrontendController();
-        if ($tsfe) {
-            return $tsfe->getLanguage();
-        }
-        $request = $this->getRequest($request);
-        return $request->getAttribute('language', null);
+        return $this->getRequest($request)?->getAttribute('language');
     }
 
     public function buildCallbackUri(array $queryParameters, ServerRequestInterface $request = null): string
@@ -105,11 +94,6 @@ class SiteService
         $callbackSlug = trim($callbackSlug, '/');
 
         return empty($callbackSlug) ? self::CALLBACK_SLUG : $callbackSlug;
-    }
-
-    private function getTypoScriptFrontendController(): ?TypoScriptFrontendController
-    {
-        return $GLOBALS['TSFE'] ?? null;
     }
 
     private function getRequest(ServerRequestInterface $request = null): ServerRequestInterface
